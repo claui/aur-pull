@@ -125,6 +125,8 @@ function _pull_pkgbase {
   if [[ "${dry_run}" -ne 0 ]]; then
     return
   fi
+
+  git -C "${basedir}/${pkgbase}" pull --autostash
 }
 
 export -f _pull_pkgbase
