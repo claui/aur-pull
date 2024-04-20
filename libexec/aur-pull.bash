@@ -2,6 +2,7 @@ source libexec/branch.bash
 source libexec/constants.bash
 source libexec/options.bash
 source libexec/remote-url.bash
+source libexec/settings.bash
 
 function __aur_pull {
   local basedir debug dry_run force num_pkgbases pkgbases remote
@@ -9,7 +10,7 @@ function __aur_pull {
   parse_options "$@"
 
   if [[ -z "${basedir:-}" ]]; then
-    basedir="$(pwd)"
+    read_config_homedir_aware 'basedir' '.config.basedir' "$(pwd)"
   fi
 
   if [[ -z "${remote:-}" ]]; then
