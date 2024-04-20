@@ -1,5 +1,20 @@
 source libexec/constants.bash
 
+function read_checkout_name {
+  local symbolic_ref_name
+
+  symbolic_ref_name="$(
+    git -C "${basedir}/${pkgbase}" symbolic-ref -q HEAD 2>/dev/null
+  )"
+  checkout_name="${symbolic_ref_name#refs/heads/}"
+
+  # Hint for shellcheck
+  export checkout_name
+}
+
+export -f read_checkout_name
+
+
 function read_branch_remotes {
   local basedir branch pkgbase
   basedir="${1?}"

@@ -3,11 +3,16 @@ source libexec/version.bash
 function parse_options {
   debug=0
   dry_run=0
+  force=0
 
   while [[ $# -gt 0 ]]; do
     case "${1}" in
       -d|--debug)
         debug=1
+        shift
+        ;;
+      -f|--force)
+        force=1
         shift
         ;;
       -h|--help)
@@ -34,7 +39,7 @@ function parse_options {
   done
 
   # Hint for shellcheck
-  export basedir debug dry_run
+  export basedir debug dry_run force
 }
 
 export -f parse_options
@@ -50,6 +55,7 @@ Usage:
 Supported options:
 
     -d, --debug     More verbose output
+    -f, --force     Continue even if safety checks fail
     -n, --dry-run   Do not fix Git remotes nor pull, just print
                     changes that would be made to the remotes
     -h, --help

@@ -29,6 +29,10 @@ The following flags are supported:
 
 Makes the output more verbose.
 
+## `-f`, `--force`
+
+Continue even if safety checks fail. You probably do not need this.
+
 ## `-h`, `--help`
 
 Explains how to use this command.

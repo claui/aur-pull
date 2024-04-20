@@ -1,10 +1,10 @@
-source libexec/branch-remote.bash
+source libexec/branch.bash
 source libexec/constants.bash
 source libexec/options.bash
 source libexec/remote-url.bash
 
 function __aur_pull {
-  local basedir debug dry_run num_pkgbases pkgbases remote
+  local basedir debug dry_run force num_pkgbases pkgbases remote
 
   parse_options "$@"
 
@@ -21,6 +21,8 @@ function __aur_pull {
 
   _log_debug 'Base directory: %s\n' "${basedir}"
   _log_debug 'Using remote: %s\n' "${remote}"
+
+  _assert_outside_worktree "${basedir}"
 
   _read_pkgbases "${basedir}"
   printf 'Found %d pkgbase(s)\n' "${#pkgbases[@]}"
@@ -40,11 +42,15 @@ export -f __aur_pull
 
 
 function _pull_pkgbase {
-  local fetch_remote pkgbase push_remote url
+  local checkout_name fetch_remote pkgbase push_remote url
   pkgbase="${1?}"
 
   _log_debug 'Processing pkgbase #%d of %d: %s\n' \
     "${PARALLEL_SEQ}" "${num_pkgbases}" "${pkgbase}"
+  if ! _is_inside_worktree "${basedir}/${pkgbase}"; then
+    _log_debug '%s: not a Git worktree; skipping\n' "${pkgbase}"
+    return
+  fi
   if ! has_any_remote "${basedir}" "${pkgbase}"; then
     _log_debug '%s: no remotes found; skipping\n' "${pkgbase}"
     return
@@ -109,12 +115,53 @@ function _pull_pkgbase {
       "${remote}" "${push_remote:-"${fetch_remote}"}"
   fi
 
+  read_checkout_name "${basedir}" "${pkgbase}"
+  if [[ "${checkout_name}" != "${__GIT_DEFAULT_BRANCH}" ]]; then
+    _log_warn '%s: skipping because %s is checked out, not %s\n' \
+      "${pkgbase}" "${checkout_name}" "${__GIT_DEFAULT_BRANCH}"
+    return
+  fi
+
   if [[ "${dry_run}" -ne 0 ]]; then
     return
   fi
 }
 
 export -f _pull_pkgbase
+
+
+function _assert_outside_worktree {
+  local basedir
+  basedir="${1?}"
+
+  if _is_inside_worktree "${basedir}"; then
+    if [[ "${force}" -eq 0 ]]; then
+      echo '[ERROR] Base directory is inside a Git worktree' \
+        '(use --force to override)'
+      return 1
+    else
+      echo '[WARNING] Base directory is inside a Git worktree;' \
+        'proceeding because --force is set'
+    fi
+  fi
+}
+
+export -f _assert_outside_worktree
+
+
+function _is_inside_worktree {
+  local dir
+  dir="${1?}"
+
+  if [[ "$(
+    git -C "${dir}" rev-parse --is-inside-work-tree 2>/dev/null \
+      || true)" != 'true' ]]
+  then
+    return 1
+  fi
+}
+
+export -f _is_inside_worktree
 
 
 function _read_pkgbases {
@@ -148,3 +195,15 @@ function _log_debug {
 }
 
 export -f _log_debug
+
+
+function _log_warn {
+  local pattern
+
+  pattern="${1?}"
+  shift
+  # shellcheck disable=SC2059  # Pattern interpolation
+  printf "[WARNING] ${pattern}" "$@"
+}
+
+export -f _log_warn
