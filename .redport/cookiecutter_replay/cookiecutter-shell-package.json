@@ -1,0 +1,34 @@
+{
+  "cookiecutter": {
+    "project_title": "aur-pull",
+    "project_slug": "aur-pull",
+    "project_description": "Plugin for aurutils to `git pull` multiple repositories",
+    "first_executable_name": "aur-pull",
+    "project_version": "0.1.0",
+    "project_license": "Apache-2.0",
+    "author_full_name": "Claudia Pellegrino",
+    "author_email": "clau@tiqua.de",
+    "copyright_holder_full_name": "Claudia Pellegrino",
+    "github_username": "claui",
+    "_extensions": [
+      "local_extensions.CustomFunctionsExtension"
+    ],
+    "_template": "shell",
+    "_checkout": null
+  },
+  "_cookiecutter": {
+    "project_title": "",
+    "project_slug": "{{ cookiecutter.project_title.lower().replace(' ', '-') }}",
+    "project_description": "",
+    "first_executable_name": "{{ cookiecutter.project_slug }}",
+    "project_version": "0.1.0",
+    "project_license": [
+      "Apache-2.0",
+      "Proprietary"
+    ],
+    "author_full_name": "Claudia Pellegrino",
+    "author_email": "clau@tiqua.de",
+    "copyright_holder_full_name": "{{ cookiecutter.author_full_name }}",
+    "github_username": "claui"
+  }
+}
