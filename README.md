@@ -1,5 +1,9 @@
 # aur-pull
 
+Scans subdirectories for Git repositories. Fixes their Git `fetch`
+remotes, changing them to HTTPS as needed, then runs
+`git pull --autostash`.
+
 ## Installation
 
 ### Installing manually
