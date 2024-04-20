@@ -3,7 +3,7 @@
 # Synopsis
 
 ```shell
-aur-pull [FLAGS] BASEDIR
+aur pull [FLAGS] BASEDIR
 ```
 
 # Description
@@ -20,7 +20,7 @@ searching for subdirectories that are Git repositories.
 If unset, aur-pull will pick a default value for `BASEDIR`. (See the
 `CONFIGURATION` section for more details.)
 
-Note: aur-pull only affects immediate (i.e. first-level)
+Note: aur-pull can only detect immediate (i.e. first-level)
 subdirectories.
 
 # Options
@@ -73,3 +73,14 @@ home directory.
 
 aur-pull defaults to the current working directory if neither
 `BASEDIR` nor `config.basedir` are set.
+
+# Notes
+
+If you have `aurutils` (AUR) installed, you can invoke this command
+via `aur pull`.
+
+Otherwise, invoke it directly as `aur-pull`.
+
+# See also
+
+`aur`(1)
