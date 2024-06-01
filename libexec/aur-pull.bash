@@ -10,7 +10,7 @@ function __aur_pull {
   parse_options "$@"
 
   if [[ -z "${basedir:-}" ]]; then
-    read_config_homedir_aware 'basedir' '.config.basedir' "$(pwd)"
+    read_config_homedir_aware 'basedir' 'config.basedir' "$(pwd)"
   fi
 
   if [[ -z "${remote:-}" ]]; then
