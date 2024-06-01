@@ -8,7 +8,16 @@ remotes, changing them to HTTPS as needed, then runs
 
 ### Installing manually
 
-Clone this repository to any directory you like.
+1. Make sure you have the following dependencies installed:
+
+    - `bash`
+    - `findutils`
+    - `git`
+    - `parallel`
+    - Python
+    - PyPI packages `dotty_dict` and `tomlkit`
+
+2. Clone this repository to any directory you like.
 
 ### Installing from the AUR
 

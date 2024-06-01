@@ -2,5 +2,6 @@
   "files.exclude": {
     "**/.git": true
   },
+  "python.defaultInterpreterPath": "/usr/bin/python",
   "shellcheck.useWorkspaceRootAsCwd": true
 }
