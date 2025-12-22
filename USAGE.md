@@ -59,6 +59,7 @@ Example `aur-pull.toml` content:
 ```toml
 [config]
 basedir = "~/aur"
+throttle_delay_secs = 0.5
 ```
 
 The following persistent configuration options are supported:
@@ -73,6 +74,11 @@ home directory.
 
 aur-pull defaults to the current working directory if neither
 `BASEDIR` nor `config.basedir` are set.
+
+## `config.throttle_delay_secs`
+
+How long each aur-pull thread will sleep after visiting each AUR
+repository. The default is `0.0`.
 
 # Notes
 

@@ -5,13 +5,15 @@ source libexec/remote-url.bash
 source libexec/settings.bash
 
 function __aur_pull {
-  local basedir debug dry_run force num_pkgbases pkgbases remote
+  local basedir debug dry_run force num_pkgbases pkgbases remote \
+    throttle_delay_secs
 
   parse_options "$@"
 
   if [[ -z "${basedir:-}" ]]; then
     read_config_homedir_aware 'basedir' 'config.basedir' "$(pwd)"
   fi
+  read_config 'throttle_delay_secs' 'config.throttle_delay_secs' '0'
 
   if [[ -z "${remote:-}" ]]; then
     remote="$(
@@ -32,7 +34,8 @@ function __aur_pull {
   export debug
   export num_pkgbases="${#pkgbases[@]}"
   export remote
-  parallel -k -j4 _pull_pkgbase ::: "${pkgbases[@]}"
+  export throttle_delay_secs
+  parallel -k -j4 _pull_pkgbase_throttled ::: "${pkgbases[@]}"
 
   if [[ "${dry_run}" -ne 0 ]]; then
     printf 'Would pull from %d repositories\n' "${num_pkgbases}"
@@ -40,6 +43,16 @@ function __aur_pull {
 }
 
 export -f __aur_pull
+
+
+function _pull_pkgbase_throttled {
+  _pull_pkgbase "$@"
+  if [[ "${throttle_delay_secs:-0}" != '0' ]]; then
+    sleep "${throttle_delay_secs}"
+  fi
+}
+
+export -f _pull_pkgbase_throttled
 
 
 function _pull_pkgbase {
